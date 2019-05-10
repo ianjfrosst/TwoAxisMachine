@@ -1,3 +1,10 @@
-**/*.aux
-**/*.log
-**/*.gz
+*.aux
+*.log
+*.gz
+
+*.bin
+*.hex
+
+*.crf
+*.d
+*.o
