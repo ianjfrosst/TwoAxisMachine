@@ -402,23 +402,23 @@ void MX_ADC1_Init(void)
     /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
     */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ;
-  hadc1.Init.Resolution = ;
-  hadc1.Init.ScanConvMode = ;
-  hadc1.Init.ContinuousConvMode = ;
-  hadc1.Init.DiscontinuousConvMode = ;
-  hadc1.Init.ExternalTrigConvEdge = ;
-  hadc1.Init.DataAlign = ;
-  hadc1.Init.NbrOfConversion = ;
-  hadc1.Init.DMAContinuousRequests = ;
-  hadc1.Init.EOCSelection = ;
+  hadc1.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
+  hadc1.Init.Resolution = ADC_RESOLUTION12b;
+  hadc1.Init.ScanConvMode = DISABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.EOCSelection = EOC_SINGLE_CONV;
   HAL_ADC_Init(&hadc1);
 
     /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
     */
-  sConfig.Channel = ADC_CHANNEL_8;		/* Currently set to input pin PB0, adjust as needed */
+  sConfig.Channel = ADC_CHANNEL_8;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
 }
@@ -461,11 +461,6 @@ void NUCLEO_Board_Init(void)
   /* Perform 3 repetition of blinking user LED at 50% duty cycle with 250 ms as period */
   User_LED_Blinking(3, 750);
 #endif
-
-//#ifdef NUCLEO_USE_ADC
-	/* Initialize the ADC peripheral */
-	MX_ADC1_Init();
-//#endif
 }
 
 /**
