@@ -76,8 +76,8 @@
 /**
   * @}
   */ /* End of ExampleTypes */
-	
-	/* Private Variables ----------------------*/
+
+/* Private Variables ----------------------*/
 
 /* Variable used to get converted value */
 __IO uint16_t uhADCxConvertedValue = 0;
@@ -88,53 +88,82 @@ __IO uint16_t uhADCxConvertedValue = 0;
 static void Error_Handler(void);
 uint16_t Read_ADC(void);
 
+void EXTI9_5_IRQHandler(void) {
+  GPIOA->ODR = (GPIOA->IDR >> (9 - 1));
+  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_9);
+}
+
 /**
   * @brief The FW main module
   */
 int main(void)
 {
   /* NUCLEO board initialization */
-	/* Init for UART, ADC, GPIO and SPI */
+  /* Init for UART, ADC, GPIO and SPI */
   NUCLEO_Board_Init();
-  
+
   /* X-NUCLEO-IHM02A1 initialization */
   BSP_Init();
-	
-	#ifdef NUCLEO_USE_USART
+
+  GPIO_InitTypeDef PA1_init = {
+    .Pin = GPIO_PIN_1,
+    .Mode = GPIO_MODE_OUTPUT_PP,
+    .Pull = GPIO_NOPULL,
+  };
+
+  GPIO_InitTypeDef PA10_init = {
+    .Pin = GPIO_PIN_9,
+    .Mode = GPIO_MODE_INPUT,
+    .Pull = GPIO_NOPULL,
+  };
+
+  HAL_GPIO_Init(GPIOA, &PA1_init);
+  HAL_GPIO_Init(GPIOA, &PA10_init);
+
+  //HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  //HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  while(1) {
+    //__WFI();
+    //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10));
+    GPIOA->ODR = (GPIOA->IDR >> 8);
+  }
+
+  #ifdef NUCLEO_USE_USART
   /* Transmit the initial message to the PC via UART */
   USART_TxWelcomeMessage();
-#endif
-	
+  #endif
+
 #if defined (MICROSTEPPING_MOTOR_EXAMPLE)
   /* Perform a batch commands for X-NUCLEO-IHM02A1 */
   MicrosteppingMotor_Example_01();
-  
+
   /* Infinite loop */
   while (1);
 #elif defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)
   /* Fill the L6470_DaisyChainMnemonic structure */
   Fill_L6470_DaisyChainMnemonic();
-	
-	/*Initialize the motor parameters */
-	Motor_Param_Reg_Init();
-  
+
+  /*Initialize the motor parameters */
+  Motor_Param_Reg_Init();
+
   /* Infinite loop */
   while (1)
   {
 
-#ifdef TEST_MOTOR		
+#ifdef TEST_MOTOR
 
-		/* Check if any Application Command for L6470 has been entered by USART */
+    /* Check if any Application Command for L6470 has been entered by USART */
     USART_CheckAppCmd();
-		
+
 #else
-		
-		uint16_t myADCVal;
-		myADCVal = Read_ADC();
-		USART_Transmit(&huart2, " ADC Read: ");
-	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
-	  USART_Transmit(&huart2, " \n\r");
-#endif		
+
+    uint16_t myADCVal;
+    myADCVal = Read_ADC();
+    USART_Transmit(&huart2, " ADC Read: ");
+    USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
+    USART_Transmit(&huart2, " \n\r");
+#endif
   }
 #endif
 }
@@ -182,7 +211,7 @@ uint16_t Read_ADC(void)
 {
   HAL_ADC_Start(&HADC);
   HAL_ADC_PollForConversion(&HADC, 100);
-  
+
   return HAL_ADC_GetValue(&HADC);
 }
 

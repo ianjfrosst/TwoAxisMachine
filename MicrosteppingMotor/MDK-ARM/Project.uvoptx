@@ -26,7 +26,7 @@
     <ToolsetNumber>0x4</ToolsetNumber>
     <ToolsetName>ARM-ADS</ToolsetName>
     <TargetOption>
-      <CLKADS>12000000</CLKADS>
+      <CLKADS>16000000</CLKADS>
       <OPTTT>
         <gFlags>1</gFlags>
         <BeepAtEnd>1</BeepAtEnd>
@@ -101,7 +101,9 @@
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
         <bEvRecOn>1</bEvRecOn>
-        <nTsel>5</nTsel>
+        <bSchkAxf>0</bSchkAxf>
+        <bTchkAxf>1</bTchkAxf>
+        <nTsel>6</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -123,7 +125,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ST-LINKIII-KEIL_SWO</Key>
-          <Name>-U-O206 -O206 -S0 -C0 -A0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_512.FLM -FS08000000 -FL080000 -FP0($$Device:STM32F401RETx$CMSIS\Flash\STM32F4xx_512.FLM)</Name>
+          <Name>-U-O206 -O206 -SF10000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P1 -N00("") -D00(00000000) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_512.FLM -FS08000000 -FL080000 -FP0($$Device:STM32F401RETx$CMSIS\Flash\STM32F4xx_512.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -133,7 +135,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGTARM</Key>
-          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)</Name>
+          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -146,72 +148,15 @@
           <Name>(105=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>168</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134238196</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>C:\Users\Allyson\Documents\twoAxisMachines\folderReduction\test\STM32CubeExpansion-SPN2_V1.1.0\Src\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\STM32F401RE_Nucleo\../../Src/main.c\168</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>175</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134238210</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>C:\Users\Allyson\Documents\twoAxisMachines\folderReduction\test\STM32CubeExpansion-SPN2_V1.1.0\Src\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\STM32F401RE_Nucleo\../../Src/main.c\175</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>169</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>C:\Users\Allyson\Documents\twoAxisMachines\folderReduction\test\STM32CubeExpansion-SPN2_V1.1.0\Src\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>176</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>C:\Users\Allyson\Documents\twoAxisMachines\folderReduction\test\STM32CubeExpansion-SPN2_V1.1.0\Src\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
+      <MemoryWindow1>
+        <Mm>
+          <WinNumber>1</WinNumber>
+          <SubType>0</SubType>
+          <ItemText>\\STM32F401RE_Nucleo\../Src/params.c\MotorParameterInitData</ItemText>
+          <AccSizeX>0</AccSizeX>
+        </Mm>
+      </MemoryWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -256,6 +201,7 @@
       <pMultCmdsp></pMultCmdsp>
       <DebugDescription>
         <Enable>1</Enable>
+        <EnableFlashSeq>0</EnableFlashSeq>
         <EnableLog>0</EnableLog>
         <Protocol>2</Protocol>
         <DbgClock>10000000</DbgClock>
@@ -265,7 +211,7 @@
 
   <Group>
     <GroupName>Drivers/BSP/Component/L6470</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -517,7 +463,7 @@
 
   <Group>
     <GroupName>Drivers/BSP/STM32F4xx-Nucleo</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -681,17 +627,65 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>32</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Src\NUCLEO-F401RE\stm32f4xx_it.h</PathWithFileName>
+      <FilenameWithoutPath>stm32f4xx_it.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>33</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Src\example.h</PathWithFileName>
+      <FilenameWithoutPath>example.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>34</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Src\example_usart.h</PathWithFileName>
+      <FilenameWithoutPath>example_usart.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>35</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Src\params.h</PathWithFileName>
+      <FilenameWithoutPath>params.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
     <GroupName>Drivers/CMSIS</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>7</GroupNumber>
-      <FileNumber>32</FileNumber>
+      <FileNumber>36</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -704,82 +698,14 @@
   </Group>
 
   <Group>
-    <GroupName>Example/User/Inc</GroupName>
-    <tvExp>0</tvExp>
-    <tvExpOptDlg>0</tvExpOptDlg>
-    <cbSel>0</cbSel>
-    <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>8</GroupNumber>
-      <FileNumber>33</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Inc\example_usart.h</PathWithFileName>
-      <FilenameWithoutPath>example_usart.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>8</GroupNumber>
-      <FileNumber>34</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Inc\NUCLEO-F401RE\stm32f4xx_hal_conf.h</PathWithFileName>
-      <FilenameWithoutPath>stm32f4xx_hal_conf.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>8</GroupNumber>
-      <FileNumber>35</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Inc\example.h</PathWithFileName>
-      <FilenameWithoutPath>example.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>8</GroupNumber>
-      <FileNumber>36</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Inc\params.h</PathWithFileName>
-      <FilenameWithoutPath>params.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>8</GroupNumber>
-      <FileNumber>37</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Inc\NUCLEO-F401RE\stm32f4xx_it.h</PathWithFileName>
-      <FilenameWithoutPath>stm32f4xx_it.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-  </Group>
-
-  <Group>
     <GroupName>Example/MDK-ARM</GroupName>
     <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>9</GroupNumber>
-      <FileNumber>38</FileNumber>
+      <GroupNumber>8</GroupNumber>
+      <FileNumber>37</FileNumber>
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

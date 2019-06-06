@@ -10,13 +10,13 @@
       <TargetName>STM32F401RE-Nucleo</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F401RETx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.11.0</PackID>
+          <PackID>Keil.STM32F4xx_DFP.2.13.0</PackID>
           <PackURL>http://www.keil.com/pack</PackURL>
           <Cpu>IRAM(0x20000000,0x18000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -82,7 +82,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>$K\ARM\ARMCC\bin\fromelf.exe --bin --output=$l@L.bin !L</UserProg1Name>
+            <UserProg1Name>$K\ARM\ARMCC\bin\fromelf.exe --bin --output="$l@L.bin" !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -159,7 +159,7 @@
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>1</AdsALst>
+            <AdsALst>0</AdsALst>
             <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
@@ -184,6 +184,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
+            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -311,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -323,20 +324,21 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
-            <v6Lang>1</v6Lang>
-            <v6LangP>1</v6LangP>
+            <v6Lang>3</v6Lang>
+            <v6LangP>3</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls>--C99</MiscControls>
+              <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F401xE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Inc;..\Inc\NUCLEO-F401RE;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\..\Drivers\CMSIS\Include;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\BSP\Components\L6470;..\..\Drivers\BSP\Components\Common;..\..\Drivers\BSP\STM32F4xx-Nucleo;..\..\Drivers\BSP\X-NUCLEO-IHM02A1;..\..\Drivers\BSP\X-NUCLEO-IHM02A1\NUCLEO-F401RE</IncludePath>
+              <IncludePath>..\Src;..\Src\NUCLEO-F401RE;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\..\Drivers\CMSIS\Include;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\BSP\Components\L6470;..\..\Drivers\BSP\Components\Common;..\..\Drivers\BSP\STM32F4xx-Nucleo;..\..\Drivers\BSP\X-NUCLEO-IHM02A1;..\..\Drivers\BSP\X-NUCLEO-IHM02A1\NUCLEO-F401RE</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -560,6 +562,26 @@
               <FileType>1</FileType>
               <FilePath>..\Src\params.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f4xx_it.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Src\NUCLEO-F401RE\stm32f4xx_it.h</FilePath>
+            </File>
+            <File>
+              <FileName>example.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Src\example.h</FilePath>
+            </File>
+            <File>
+              <FileName>example_usart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Src\example_usart.h</FilePath>
+            </File>
+            <File>
+              <FileName>params.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Src\params.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -569,36 +591,6 @@
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Example/User/Inc</GroupName>
-          <Files>
-            <File>
-              <FileName>example_usart.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\example_usart.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_hal_conf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\NUCLEO-F401RE\stm32f4xx_hal_conf.h</FilePath>
-            </File>
-            <File>
-              <FileName>example.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\example.h</FilePath>
-            </File>
-            <File>
-              <FileName>params.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\params.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_it.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Inc\NUCLEO-F401RE\stm32f4xx_it.h</FilePath>
             </File>
           </Files>
         </Group>
