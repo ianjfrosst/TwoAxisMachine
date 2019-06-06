@@ -88,9 +88,34 @@ __IO uint16_t uhADCxConvertedValue = 0;
 static void Error_Handler(void);
 uint16_t Read_ADC(void);
 
-void EXTI9_5_IRQHandler(void) {
-  GPIOA->ODR = (GPIOA->IDR >> (9 - 1));
-  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_9);
+/* Limit switch pin defines: Axis 0/1, Limit 0/1 */
+#define AX0_L0_PIN    GPIO_PIN_8
+#define AX0_L0_PORT   GPIOA
+#define AX0_L1_PIN    GPIO_PIN_10
+#define AX0_L1_PORT   GPIOB
+#define AX1_L0_PIN    GPIO_PIN_7
+#define AX1_L0_PORT   GPIOC
+#define AX1_L1_PIN    GPIO_PIN_9
+#define AX1_L1_PORT   GPIOA
+
+/* Initialize the GPIO for the TwoAxis limit switches */
+void TwoAxis_Init(void) {
+  GPIO_InitTypeDef gpio = {0};
+
+  gpio.Mode = GPIO_MODE_INPUT;
+  gpio.Pull = GPIO_PULLUP;
+
+  gpio.Pin = AX0_L0_PIN;
+  HAL_GPIO_Init(AX0_L0_PORT, &gpio);
+
+  gpio.Pin = AX0_L1_PIN;
+  HAL_GPIO_Init(AX0_L1_PORT, &gpio);
+
+  gpio.Pin = AX1_L0_PIN;
+  HAL_GPIO_Init(AX1_L0_PORT, &gpio);
+
+  gpio.Pin = AX1_L1_PIN;
+  HAL_GPIO_Init(AX1_L1_PORT, &gpio);
 }
 
 /**
@@ -105,34 +130,12 @@ int main(void)
   /* X-NUCLEO-IHM02A1 initialization */
   BSP_Init();
 
-  GPIO_InitTypeDef PA1_init = {
-    .Pin = GPIO_PIN_1,
-    .Mode = GPIO_MODE_OUTPUT_PP,
-    .Pull = GPIO_NOPULL,
-  };
+  TwoAxis_Init();
 
-  GPIO_InitTypeDef PA10_init = {
-    .Pin = GPIO_PIN_9,
-    .Mode = GPIO_MODE_INPUT,
-    .Pull = GPIO_NOPULL,
-  };
-
-  HAL_GPIO_Init(GPIOA, &PA1_init);
-  HAL_GPIO_Init(GPIOA, &PA10_init);
-
-  //HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  //HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-  while(1) {
-    //__WFI();
-    //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10));
-    GPIOA->ODR = (GPIOA->IDR >> 8);
-  }
-
-  #ifdef NUCLEO_USE_USART
+#if defined (NUCLEO_USE_USART)
   /* Transmit the initial message to the PC via UART */
   USART_TxWelcomeMessage();
-  #endif
+#endif
 
 #if defined (MICROSTEPPING_MOTOR_EXAMPLE)
   /* Perform a batch commands for X-NUCLEO-IHM02A1 */
@@ -151,7 +154,7 @@ int main(void)
   while (1)
   {
 
-#ifdef TEST_MOTOR
+#if defined (TEST_MOTOR)
 
     /* Check if any Application Command for L6470 has been entered by USART */
     USART_CheckAppCmd();
