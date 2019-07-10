@@ -31,6 +31,9 @@
   *
   ******************************************************************************
   */
+
+#include <stdlib.h>
+#include <stdbool.h>
 #include "xnucleoihm02a1.h"
 #include "example.h"
 #include "example_usart.h"
@@ -91,18 +94,53 @@ uint16_t Read_ADC(void);
 /* Limit switch pin defines: Axis 0/1, Limit 0/1 */
 #define AX0_L0_PIN    GPIO_PIN_8
 #define AX0_L0_PORT   GPIOA
-#define AX0_L1_PIN    GPIO_PIN_10
+#define AX0_L1_PIN    GPIO_PIN_6
 #define AX0_L1_PORT   GPIOB
 #define AX1_L0_PIN    GPIO_PIN_7
 #define AX1_L0_PORT   GPIOC
 #define AX1_L1_PIN    GPIO_PIN_9
 #define AX1_L1_PORT   GPIOA
 
+#define X_STEP_PER_CM 26
+#define Y_STEP_PER_CM 950
+
+eL6470_DirId_t ax1_dir = L6470_DIR_FWD_ID;
+bool updated = true;
+
+void EXTI9_5_IRQHandler(void) {
+  uint32_t flags =
+      __HAL_GPIO_EXTI_GET_IT(AX0_L0_PIN | AX0_L1_PIN | AX1_L0_PIN | AX1_L1_PIN);
+
+  if (flags != 0) {
+    if (HAL_GPIO_ReadPin(AX0_L0_PORT, AX0_L0_PIN)) {
+      BSP_L6470_HardStop(0, 0);
+    }
+
+    if (HAL_GPIO_ReadPin(AX0_L1_PORT, AX0_L1_PIN)) {
+      BSP_L6470_HardStop(0, 0);
+    }
+
+    if (HAL_GPIO_ReadPin(AX1_L0_PORT, AX1_L0_PIN)) {
+      BSP_L6470_HardStop(0, 1);
+      ax1_dir = L6470_DIR_REV_ID;
+    }
+
+    if (HAL_GPIO_ReadPin(AX1_L1_PORT, AX1_L1_PIN)) {
+      BSP_L6470_HardStop(0, 1);
+      ax1_dir = L6470_DIR_FWD_ID;
+    }
+
+    updated = true;
+
+    __HAL_GPIO_EXTI_CLEAR_IT(flags);
+  }
+}
+
 /* Initialize the GPIO for the TwoAxis limit switches */
 void TwoAxis_Init(void) {
   GPIO_InitTypeDef gpio = {0};
 
-  gpio.Mode = GPIO_MODE_INPUT;
+  gpio.Mode = GPIO_MODE_IT_RISING;
   gpio.Pull = GPIO_PULLUP;
 
   gpio.Pin = AX0_L0_PIN;
@@ -116,6 +154,10 @@ void TwoAxis_Init(void) {
 
   gpio.Pin = AX1_L1_PIN;
   HAL_GPIO_Init(AX1_L1_PORT, &gpio);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
 }
 
 /**
@@ -132,18 +174,6 @@ int main(void)
 
   TwoAxis_Init();
 
-#if defined (NUCLEO_USE_USART)
-  /* Transmit the initial message to the PC via UART */
-  USART_TxWelcomeMessage();
-#endif
-
-#if defined (MICROSTEPPING_MOTOR_EXAMPLE)
-  /* Perform a batch commands for X-NUCLEO-IHM02A1 */
-  MicrosteppingMotor_Example_01();
-
-  /* Infinite loop */
-  while (1);
-#elif defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)
   /* Fill the L6470_DaisyChainMnemonic structure */
   Fill_L6470_DaisyChainMnemonic();
 
@@ -151,8 +181,11 @@ int main(void)
   Motor_Param_Reg_Init();
 
   /* Infinite loop */
-  while (1)
-  {
+  while (1) {
+    // if (updated) {
+    //   BSP_L6470_Run(0, 1, ax1_dir, 25000);
+    //   updated = false;
+    // }
 
 #if defined (TEST_MOTOR)
 
@@ -168,7 +201,6 @@ int main(void)
     USART_Transmit(&huart2, " \n\r");
 #endif
   }
-#endif
 }
 
 
