@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    xnucleoihm02a1_interface.c
-  * @brief   This file is used as interface between the 
+  * @brief   This file is used as interface between the
   *          X-NUCLEO-IHM02A1 and the NUCLEO-F4xx board.
   ******************************************************************************
   *
@@ -97,7 +97,7 @@ void MX_USART2_Init(void);
 
 /**
   * @brief  This function configures the System Clock
-  * 
+  *
   * @note   The System Clock will be configured as following:
   *         - PLL Source: HSI
   *         - SYSCLK: 84 MHz
@@ -188,7 +188,7 @@ void MX_SPI1_Init(void)
   uint32_t freq;
   uint16_t freq_div;
   uint32_t spi_baudrateprescaler;
-  
+
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
@@ -199,10 +199,10 @@ void MX_SPI1_Init(void)
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLED;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
-  
+
   freq = HAL_RCC_GetPCLK2Freq();
   freq_div = (freq / MAX_BAUDRATE);
-  
+
   if (freq_div < 2)
   {
     spi_baudrateprescaler = SPI_BAUDRATEPRESCALER_2;
@@ -261,7 +261,7 @@ void MX_SPI1_Init(void)
       }
     }
   }
-  
+
   hspi1.Init.BaudRatePrescaler = spi_baudrateprescaler;  // the baudrate will be lower than MAX_BAUDRATE (5 MBits/s)
   HAL_SPI_Init(&hspi1);
 }
@@ -285,7 +285,7 @@ void MX_SPI2_Init(void)
   uint32_t freq;
   uint16_t freq_div;
   uint32_t spi_baudrateprescaler;
-  
+
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
@@ -296,10 +296,10 @@ void MX_SPI2_Init(void)
   hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLED;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
-  
+
   freq = HAL_RCC_GetPCLK1Freq();
   freq_div = (freq / MAX_BAUDRATE);
-  
+
   if (freq_div < 2)
   {
     spi_baudrateprescaler = SPI_BAUDRATEPRESCALER_2;
@@ -358,7 +358,7 @@ void MX_SPI2_Init(void)
       }
     }
   }
-  
+
   hspi2.Init.BaudRatePrescaler = spi_baudrateprescaler; // the baudrate will be lower than MAX_BAUDRATE (5 MBits/s)
   HAL_SPI_Init(&hspi2);
 }
@@ -397,30 +397,44 @@ void MX_ADC1_Init(void)
   ADC_ChannelConfTypeDef sConfig;
 
   /* GPIO Ports Clock Enable */
-  __GPIOB_CLK_ENABLE();
+  __GPIOA_CLK_ENABLE();
+  GPIO_InitTypeDef gpio = {0};
 
-    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
-    */
+  gpio.Mode = GPIO_MODE_ANALOG;
+  gpio.Pull = GPIO_NOPULL;
+  gpio.Pin = GPIO_PIN_0;
+  HAL_GPIO_Init(GPIOA, &gpio);
+  gpio.Pin = GPIO_PIN_1;
+  HAL_GPIO_Init(GPIOA, &gpio);
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment
+   * and number of conversion)
+   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
-  hadc1.Init.Resolution = ADC_RESOLUTION12b;
-  hadc1.Init.ScanConvMode = DISABLE;
-  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.NbrOfConversion = 2;
   hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = EOC_SINGLE_CONV;
+  hadc1.Init.EOCSelection = DISABLE;
   HAL_ADC_Init(&hadc1);
 
-    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-    */
-  sConfig.Channel = ADC_CHANNEL_8;
+  /** Configure for the selected ADC regular channel its corresponding rank in
+   * the sequencer and its sample time.
+   */
+  sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
+  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Rank = 2;
+  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 }
 
 /**
@@ -448,19 +462,21 @@ void NUCLEO_Board_Init(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  
+
   /* Initialize the SPI used by the X-NUCLEO-IHM02A1 */
   MX_SPI_Init();
-  
+
 #ifdef NUCLEO_USE_USART
   /* Initialize the USART peripheral */
   MX_USART2_Init();
-#endif  
+#endif
 
 #ifdef NUCLEO_USE_USER_LED
   /* Perform 3 repetition of blinking user LED at 50% duty cycle with 250 ms as period */
-  User_LED_Blinking(3, 750);
+  // User_LED_Blinking(3, 750);
 #endif
+
+  MX_ADC1_Init();
 }
 
 /**
@@ -472,9 +488,9 @@ void User_LED_Blinking(uint8_t repetitions, uint16_t period_ms)
 {
   uint8_t r;
   uint16_t half_period_ms;
-  
+
   half_period_ms = period_ms >> 1;
-  
+
   for (r=0; r<repetitions; r++)
   {
     /* Switch on the user LED */
