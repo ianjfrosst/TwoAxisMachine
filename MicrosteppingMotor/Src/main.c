@@ -14,12 +14,14 @@
 
 /* Private Variables ----------------------*/
 
-/* Variable used to get converted value */
-__IO uint16_t uhADCxConvertedValue = 0;
-
 /* Private function prototypes -----------------------------------------------*/
 static void Error_Handler(void);
 uint16_t Read_ADC(void);
+
+typedef enum {
+  X = 0,
+  Y = 1,
+} Axis;
 
 /* Limit switch pin defines: Axis 0/1, Limit 0/1 */
 #define AX0_L0_PIN    GPIO_PIN_8
@@ -36,11 +38,12 @@ uint16_t Read_ADC(void);
 
 #define MAX_SPEED (26840)
 
+#define X_MAX_SPEED (MAX_SPEED / 3)
+#define Y_MAX_SPEED (MAX_SPEED)
+
 #define SPEED_SCALE (67)
 
 bool updated = true;
-eL6470_DirId_t ax0_dir = L6470_DIR_FWD_ID;
-eL6470_DirId_t ax1_dir = L6470_DIR_FWD_ID;
 
 /**
  * @brief EXTI9_5 IRQ Handler
@@ -52,23 +55,19 @@ void EXTI9_5_IRQHandler(void) {
 
   if (flags != 0) {
     if (HAL_GPIO_ReadPin(AX0_L0_PORT, AX0_L0_PIN)) {
-      // BSP_L6470_HardStop(0, 0);
-      ax0_dir = L6470_DIR_REV_ID;
+      BSP_L6470_HardStop(0, 0);
     }
 
     if (HAL_GPIO_ReadPin(AX0_L1_PORT, AX0_L1_PIN)) {
-      // BSP_L6470_HardStop(0, 0);
-      ax0_dir = L6470_DIR_FWD_ID;
+      BSP_L6470_HardStop(0, 0);
     }
 
     if (HAL_GPIO_ReadPin(AX1_L0_PORT, AX1_L0_PIN)) {
-      // BSP_L6470_HardStop(0, 1);
-      ax1_dir = L6470_DIR_REV_ID;
+      BSP_L6470_HardStop(0, 1);
     }
 
     if (HAL_GPIO_ReadPin(AX1_L1_PORT, AX1_L1_PIN)) {
-      // BSP_L6470_HardStop(0, 1);
-      ax1_dir = L6470_DIR_FWD_ID;
+      BSP_L6470_HardStop(0, 1);
     }
 
     updated = true;
@@ -102,6 +101,48 @@ void TwoAxis_Init(void) {
 
 // #define RUN_USART_APP
 
+
+void run_speed(uint8_t ax, uint16_t meas, uint32_t max) {
+
+  int32_t val = 0;
+  eL6470_DirId_t dir = 0;
+
+  if (meas > 2048) {
+    val = meas - 2048;
+    dir = L6470_DIR_FWD_ID;
+  } else {
+    val = 2048 - meas;
+    dir = L6470_DIR_REV_ID;
+  }
+
+  if (val < 100) {
+    val = 0;
+  }
+
+  val *= max;
+  val /= 2048;
+
+  if (ax == X) {
+    if (HAL_GPIO_ReadPin(AX0_L0_PORT, AX0_L0_PIN) && (dir == L6470_DIR_FWD_ID)) {
+      val = 0;
+    }
+
+    if (HAL_GPIO_ReadPin(AX0_L1_PORT, AX0_L1_PIN) && (dir == L6470_DIR_REV_ID)) {
+      val = 0;
+    }
+  } else if (ax == Y) {
+    if (HAL_GPIO_ReadPin(AX1_L0_PORT, AX1_L0_PIN) && (dir == L6470_DIR_FWD_ID)) {
+      val = 0;
+    }
+
+    if (HAL_GPIO_ReadPin(AX1_L1_PORT, AX1_L1_PIN) && (dir == L6470_DIR_REV_ID)) {
+      val = 0;
+    }
+  }
+
+  BSP_L6470_Run(0, ax, dir, val);
+}
+
 /**
  * @brief The FW main module
  */
@@ -132,22 +173,21 @@ int main(void) {
 #else
 
     HAL_ADC_Start(&HADC);
-    HAL_ADC_PollForConversion(&HADC, 100);
+    HAL_ADC_PollForConversion(&HADC, 10);
     uint16_t adc0 = HAL_ADC_GetValue(&HADC);
-    HAL_ADC_PollForConversion(&HADC, 100);
+    HAL_ADC_PollForConversion(&HADC, 10);
     uint16_t adc1 = HAL_ADC_GetValue(&HADC);
+    HAL_ADC_Stop(&HADC);
 
     USART_Transmit(&huart2, " ADC Read 0: ");
     USART_Transmit(&huart2, num2hex(adc0, WORD_F));
     USART_Transmit(&huart2, " 1: ");
     USART_Transmit(&huart2, num2hex(adc1, WORD_F));
     USART_Transmit(&huart2, " \n\r");
+    HAL_Delay(50);
 
-    // if (updated) {
-    //   BSP_L6470_Run(0, 0, ax0_dir, MAX_SPEED / 3);
-    //   // BSP_L6470_Run(0, 1, ax1_dir, MAX_SPEED);
-    //   updated = false;
-    // }
+    run_speed(X, adc0, X_MAX_SPEED);
+    run_speed(Y, adc1, Y_MAX_SPEED);
 
 #endif
   }
